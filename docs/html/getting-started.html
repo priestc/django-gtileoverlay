@@ -1,0 +1,154 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Getting started with django-gtileoverlay &mdash; django-gtileoverlay v1.0 documentation</title>
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '1.0',
+        COLLAPSE_MODINDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="django-gtileoverlay v1.0 documentation" href="index.html" />
+    <link rel="next" title="Additional Features" href="additional-features.html" />
+    <link rel="prev" title="Welcome to django-gtileoverlay’s documentation!" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="additional-features.html" title="Additional Features"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Welcome to django-gtileoverlay’s documentation!"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">django-gtileoverlay v1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="getting-started-with-django-gtileoverlay">
+<h1>Getting started with django-gtileoverlay<a class="headerlink" href="#getting-started-with-django-gtileoverlay" title="Permalink to this headline">¶</a></h1>
+<ol class="arabic simple">
+<li>First, make a URL pattern:</li>
+</ol>
+<div class="highlight-python"><div class="highlight"><pre><span class="p">(</span><span class="s">r&#39;^overlay/(?P&lt;z&gt;\d{1,2})_(?P&lt;x&gt;\d{1,5})_(?P&lt;y&gt;\d{1,5}).png$&#39;</span><span class="p">,</span> <span class="s">&#39;my_app.views.overlay&#39;</span><span class="p">),</span>
+<span class="c"># matches all requests that look like this: http://domain.com/overlay/23_34_54.png</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="2">
+<li>Now create a view like so:</li>
+</ol>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">overlay</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="kn">from</span> <span class="nn">overlay.overlays</span> <span class="kn">import</span> <span class="n">GTileOverlay</span> <span class="k">as</span> <span class="n">GTO</span>
+
+    <span class="n">qs</span> <span class="o">=</span> <span class="n">MyModel</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+    <span class="n">qs2</span> <span class="o">=</span> <span class="n">MyOtherModel</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+
+    <span class="n">ov</span> <span class="o">=</span> <span class="n">GTO</span><span class="p">(</span><span class="n">z</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span>
+             <span class="n">queryset</span><span class="o">=</span><span class="n">qs</span><span class="p">,</span>
+             <span class="n">field</span><span class="o">=</span><span class="s">&#39;location&#39;</span><span class="p">,</span>  <span class="c"># Name of the PointField which contains the lat/long information</span>
+             <span class="n">icon</span><span class="o">=</span><span class="s">&quot;/path/to/icon.png&quot;</span><span class="p">)</span>
+
+    <span class="n">ov2</span> <span class="o">=</span> <span class="n">GTO</span><span class="p">(</span><span class="n">z</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span>
+              <span class="n">queryset</span><span class="o">=</span><span class="n">qs2</span><span class="p">,</span>
+              <span class="n">fields</span><span class="o">=</span><span class="p">(</span><span class="s">&#39;lat&#39;</span><span class="p">,</span> <span class="s">&#39;lng&#39;</span><span class="p">),</span> <span class="c"># name of the two FloatFields containing the lat/longs</span>
+              <span class="n">hard_limit</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span>        <span class="c"># limit the amount of icons per square to 500 items.</span>
+              <span class="n">image</span><span class="o">=</span><span class="n">ov</span><span class="o">.</span><span class="n">output</span><span class="p">(),</span>     <span class="c"># output overtop the previous overlay</span>
+             <span class="p">)</span>
+
+    <span class="n">response</span> <span class="o">=</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="n">mimetype</span><span class="o">=</span><span class="s">&quot;image/png&quot;</span><span class="p">)</span>
+    <span class="n">ov2</span><span class="o">.</span><span class="n">output</span><span class="p">()</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="s">&quot;PNG&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">response</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="3">
+<li>Finally, add the following code to your google maps page:</li>
+</ol>
+<div class="highlight-html"><div class="highlight"><pre><span class="nt">&lt;script </span><span class="na">type=</span><span class="s">&quot;text/javascript&quot;</span><span class="nt">&gt;</span>
+      <span class="kd">var</span> <span class="nx">MyOverlay</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">GTileLayerOverlay</span><span class="p">(</span>
+           <span class="k">new</span> <span class="nx">GTileLayer</span><span class="p">(</span><span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="p">{</span>
+              <span class="nx">tileUrlTemplate</span><span class="o">:</span> <span class="s1">&#39;/overlay/{Z}_{X}_{Y}.png/&#39;</span><span class="p">,</span>     <span class="c1">//must match your urlpattern</span>
+              <span class="nx">isPng</span><span class="o">:</span><span class="kc">true</span><span class="p">,</span>
+              <span class="nx">opacity</span><span class="o">:</span><span class="mf">1.0</span><span class="p">}</span>
+           <span class="p">)</span>
+      <span class="p">);</span>
+      <span class="nx">map</span><span class="p">.</span><span class="nx">addOverlay</span><span class="p">(</span><span class="nx">MyOverlay</span><span class="p">);</span>
+<span class="nt">&lt;/script&gt;</span>
+</pre></div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <h4>Previous topic</h4>
+            <p class="topless"><a href="index.html"
+                                  title="previous chapter">Welcome to django-gtileoverlay&#8217;s documentation!</a></p>
+            <h4>Next topic</h4>
+            <p class="topless"><a href="additional-features.html"
+                                  title="next chapter">Additional Features</a></p>
+            <h3>This Page</h3>
+            <ul class="this-page-menu">
+              <li><a href="_sources/getting-started.txt"
+                     rel="nofollow">Show Source</a></li>
+            </ul>
+          <div id="searchbox" style="display: none">
+            <h3>Quick search</h3>
+              <form class="search" action="search.html" method="get">
+                <input type="text" name="q" size="18" />
+                <input type="submit" value="Go" />
+                <input type="hidden" name="check_keywords" value="yes" />
+                <input type="hidden" name="area" value="default" />
+              </form>
+              <p class="searchtip" style="font-size: 90%">
+              Enter search terms or a module, class or function name.
+              </p>
+          </div>
+          <script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="additional-features.html" title="Additional Features"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Welcome to django-gtileoverlay’s documentation!"
+             >previous</a> |</li>
+        <li><a href="index.html">django-gtileoverlay v1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+      &copy; Copyright 2009, Chris Priest.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 0.6.3.
+    </div>
+  </body>
+</html>

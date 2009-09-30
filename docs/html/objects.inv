@@ -1,0 +1,7 @@
+# Sphinx inventory version 1
+# Project: django-gtileoverlay
+# Version: 1.0
+gtileoverlay.overlays.GTileOverlay.icon method reference.html
+gtileoverlay.overlays.GTileOverlay.output method reference.html
+gtileoverlay.overlays.GTileOverlay.get_filter method reference.html
+gtileoverlay.overlays.GTileOverlay class reference.html

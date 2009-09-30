@@ -1,0 +1,3 @@
+1. Python - Tested on 2.5 and 2.6. May work in older versions.
+2. Django - Works with 1.1 and maybe older versions.
+3. PIL - Tested on 1.1.6, may be compatable with older versions.

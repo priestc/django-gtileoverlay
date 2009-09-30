@@ -1,0 +1,202 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Reference &mdash; django-gtileoverlay v1.0 documentation</title>
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '1.0',
+        COLLAPSE_MODINDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="django-gtileoverlay v1.0 documentation" href="index.html" />
+    <link rel="prev" title="Additional Features" href="additional-features.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="additional-features.html" title="Additional Features"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">django-gtileoverlay v1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="reference">
+<h1>Reference<a class="headerlink" href="#reference" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="gtileoverlay.overlays.GTileOverlay">
+<em class="property">class </em><tt class="descclassname">gtileoverlay.overlays.</tt><tt class="descname">GTileOverlay</tt><big>(</big><em>zoom</em>, <em>x</em>, <em>y</em>, <em>image=None</em>, <em>queryset=None</em>, <em>hard_limit=None</em>, <em>icon=None</em>, <em>field=None</em>, <em>fields=None</em><big>)</big><a class="headerlink" href="#gtileoverlay.overlays.GTileOverlay" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a 256*256 PNG image with overlayed markers for use on
+GTileOverlay layers in Google Maps.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="21%" />
+<col width="79%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th class="head">Keyword</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr><td>zoom</td>
+<td>Zoom level of the Google Map (should be set
+automatically by the Google Maps API)</td>
+</tr>
+<tr><td>x, y</td>
+<td>X and Y coordinates of the tile image.</td>
+</tr>
+<tr><td>image</td>
+<td>The starting image that will get printed to</td>
+</tr>
+<tr><td>queryset</td>
+<td>The queryset that will be filtered down to the
+lat/long bounds</td>
+</tr>
+<tr><td>hard_limit</td>
+<td>Maximum number of points that will be printed on each
+image</td>
+</tr>
+<tr><td>icon</td>
+<td>Path to the icon that will be used to denote each
+location</td>
+</tr>
+<tr><td>fields</td>
+<td>The name of the lat/long fields in the model. Must be
+<a href="#id1"><span class="problematic" id="id2">``</span></a>FloatField``s</td>
+</tr>
+<tr><td>field</td>
+<td>The same as <strong>fields</strong> except a single <tt class="docutils literal"><span class="pre">PointField</span></tt>
+(part of GeoDjango) instead of <tt class="docutils literal"><span class="pre">FloatField</span></tt></td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="gtileoverlay.overlays.GTileOverlay.output">
+<tt class="descname">output</tt><big>(</big><em>debug=False</em>, <em>expand=True</em>, <em>just_queryset=False</em>, <em>shuffle=False</em><big>)</big><a class="headerlink" href="#gtileoverlay.overlays.GTileOverlay.output" title="Permalink to this definition">¶</a></dt>
+<dd><p>All points are placed on the image, and then that image is returned.</p>
+<blockquote>
+</blockquote>
+<table border="1" class="docutils">
+<colgroup>
+<col width="21%" />
+<col width="79%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th class="head">Keyword</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr><td>debug</td>
+<td>If set to True, some debug information will be
+outputted to the image, and a red box will be printed
+around each image.</td>
+</tr>
+<tr><td>expand</td>
+<td>If set to false, the queryset bounding filter will not
+be expanded, so any icons placed near the edge of the
+image will get cut-off. Useful for getting the exact
+number of items that are in the bounding box.</td>
+</tr>
+<tr><td>shuffle</td>
+<td>If set to False, the queryset will not be shuffled.
+Shuffling occurs by adding &#8220;.order_by(&#8216;?&#8217;)&#8221; to the end
+of the queryset. This helps minimize odd overlapping
+effects that occur sometimes. Different databases
+handle this shuffling technique, so it can be a
+performance issue.</td>
+</tr>
+<tr><td>just_queryset</td>
+<td>If set to True, returns just the queryset of object
+without placing them into the image.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="gtileoverlay.overlays.GTileOverlay.icon">
+<tt class="descname">icon</tt><big>(</big><em>path</em><big>)</big><a class="headerlink" href="#gtileoverlay.overlays.GTileOverlay.icon" title="Permalink to this definition">¶</a></dt>
+<dd>sets the icon, and automatically sets the width of the icon.</dd></dl>
+
+<dl class="method">
+<dt id="gtileoverlay.overlays.GTileOverlay.get_filter">
+<tt class="descname">get_filter</tt><big>(</big><em>expand=True</em><big>)</big><a class="headerlink" href="#gtileoverlay.overlays.GTileOverlay.get_filter" title="Permalink to this definition">¶</a></dt>
+<dd>Creates a filter with the bounds being the lattitude/longitude of
+the image. expand=True will expand the bounds one half the icon&#8217;s
+width. An icon mut be set for this feature to work</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <h4>Previous topic</h4>
+            <p class="topless"><a href="additional-features.html"
+                                  title="previous chapter">Additional Features</a></p>
+            <h3>This Page</h3>
+            <ul class="this-page-menu">
+              <li><a href="_sources/reference.txt"
+                     rel="nofollow">Show Source</a></li>
+            </ul>
+          <div id="searchbox" style="display: none">
+            <h3>Quick search</h3>
+              <form class="search" action="search.html" method="get">
+                <input type="text" name="q" size="18" />
+                <input type="submit" value="Go" />
+                <input type="hidden" name="check_keywords" value="yes" />
+                <input type="hidden" name="area" value="default" />
+              </form>
+              <p class="searchtip" style="font-size: 90%">
+              Enter search terms or a module, class or function name.
+              </p>
+          </div>
+          <script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="additional-features.html" title="Additional Features"
+             >previous</a> |</li>
+        <li><a href="index.html">django-gtileoverlay v1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+      &copy; Copyright 2009, Chris Priest.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 0.6.3.
+    </div>
+  </body>
+</html>
