@@ -16,6 +16,6 @@ setup(name='django-gtileoverlay',
         'Operating System :: OS Independent',
         'Programming Language :: Python',
         'Framework :: Django',
-    ]
+    ],
     requires=['django (>=1.0)']
 )
