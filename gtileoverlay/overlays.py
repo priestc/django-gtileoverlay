@@ -4,7 +4,6 @@ import ImageDraw
 import random
 
 from django.contrib.gis.gdal.envelope import Envelope
-from django.http import HttpResponse
 
 from globalmaptiles import GlobalMercator
 
@@ -186,6 +185,9 @@ class GTileOverlay():
     def output(self, debug=False, expand=True, just_queryset=False,
                      shuffle=False):
         """All points are placed on the image, and then that image is returned.
+        Instead of calling this function, you can also call `as_response()`
+        with the same arguments, which will return the image as a django
+        response object.
         
             .. tabularcolumns:: |l|L|
 
@@ -210,7 +212,6 @@ class GTileOverlay():
         ==============   ====================================================
         
         """
-
                     
         #if queryset is empty or no icon is set, return original image
         if (not self.queryset or not self.icon_width) and not just_queryset:
@@ -242,6 +243,17 @@ class GTileOverlay():
         self._put_points()
 
         return self.im
+
+    def as_response(self, *args, **kwargs):
+        """
+        Returns the image as a django response object
+        """
+        
+        from django.http import HttpResponse
+        response = HttpResponse(mimetype="image/png")
+        self.output(*args, **kwargs).save(response, "PNG")
+        
+        return response
 
     def _debug_messages(self):
         """Prints debug messages and a red bounding box onto the outputted
